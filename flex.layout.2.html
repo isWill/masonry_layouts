@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+    }
+    .queue {
+      flex-basis: 24%;
+    }
+    .item {
+      width: 100%;
+      margin: 2.5% 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+  </div>
+  <script>
+    class FLexLayout {
+      constructor() {
+        this.conElem = document.getElementsByClassName('container')[0]
+        this.itemWrpElems = document.getElementsByClassName('item-wrapper')
+        this.frag = document.createDocumentFragment()
+
+        this.itemWrpHeight = null
+        this.itemWrpElemsLen = this.itemWrpElems.length
+
+        this.MAX_COLOR = 255
+        this.HEIGHT_SCOPE = 150
+        this.MIN_HEIGHT = 200
+      }
+
+      getRandom(num) {
+        return Math.floor(Math.random() * num)
+      }
+
+      getColor() {
+        return `rgb(${this.getRandom(this.MAX_COLOR)}, ${this.getRandom(this.MAX_COLOR)}, ${this.getRandom(this.MAX_COLOR)})`
+      }
+
+      getHeight() {
+        return `${this.getRandom(this.HEIGHT_SCOPE) + this.MIN_HEIGHT}px`
+      }
+
+      getMinItemWrp() {
+        let min, nth
+        for (let m = 0; m < this.itemWrpElemsLen; m++) {
+          if (!min) {
+            min = this.itemWrpElems[m].getBoundingClientRect().height
+            nth = 0
+          } else {
+            if (this.itemWrpElems[m].getBoundingClientRect().height < min) {
+              min = this.itemWrpElems[m].getBoundingClientRect().height
+              nth = m
+            }
+          }
+        }
+        return {
+          min: min,
+          nth: nth
+        }
+      }
+
+      makeItem(itemIndex, wrpIndex) {
+        let item = document.createElement('div')
+            
+        item.className = 'item'
+        item.innerText = itemIndex
+        item.style.backgroundColor = this.getColor()
+        item.style.height = this.getHeight()
+        this.itemWrpElems[wrpIndex].appendChild(item)
+      }
+
+      creatItem() {
+        for (let j = 5; j < 80; j++) {
+          this.makeItem(j, this.getMinItemWrp().nth)
+        }
+      }
+
+      init() {
+        for (let i = 0; i < this.itemWrpElemsLen; i++) {
+          for (let n = 0; n < 4; n++) {
+            this.makeItem(n, i)
+          }
+        }
+
+        this.creatItem()
+      }
+    }
+
+    let flexLayout = new FLexLayout()
+    flexLayout.init()
+  </script>
+</body>
+</html>

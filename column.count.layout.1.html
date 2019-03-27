@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      column-count: 4;
+      column-gap: .5vw;
+      padding-top: .5vw;
+    }
+    .item {
+      width: 24vw;
+      margin-bottom: 1vw;
+      break-inside: avoid;
+    }
+  </style>
+</head>
+<body>
+  <div class="container"></div>
+  <script>
+    let getRandom = (num) => {
+      return Math.floor(Math.random() * num)
+    }
+
+    let getColor = (maxColor) => {
+      return `rgb(${getRandom(maxColor)}, ${getRandom(maxColor)}, ${getRandom(maxColor)})`
+    }
+
+    let getHeight = (heightScope, minHeight) => {
+      return `${getRandom(heightScope) + minHeight}px`
+    }
+
+    class ColumnCountLayout {
+      constructor(paramObj) {
+        if (!(typeof paramObj === 'object' && paramObj instanceof Object && !(paramObj instanceof Array))) throw new Error('Param is no object type!')
+        this.conElem = paramObj.conElem
+
+        this.MAX_COLOR = param.maxColor || 255
+        this.HEIGHT_SCOPE = param.heightScope || 150
+        this.MIN_HEIGHT = param.minHeight || 200
+
+        this.init()
+      }
+
+      makeItem(itemIndex) {
+        let item = document.createElement('div')
+            
+        item.className = 'item'
+        item.innerText = itemIndex
+        item.style.backgroundColor = getColor(this.MAX_COLOR)
+        item.style.height = getHeight(this.HEIGHT_SCOPE, this.MIN_HEIGHT)
+        this.conElem.appendChild(item)
+      }
+
+      creatItem() {
+        for (let i = 0; i < 100; i++) {
+          this.makeItem(i)
+        }
+      }
+
+      init() {
+        this.creatItem()
+      }
+    }
+
+    let param = {
+      conElem: document.getElementsByClassName('container')[0]
+    }
+
+    let columnCountLayout = new ColumnCountLayout(param)
+  </script>
+</body>
+</html>

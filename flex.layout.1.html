@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+    }
+    .queue {
+      flex-basis: 24%;
+    }
+    .item {
+      width: 100%;
+      margin: 2.5% 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+  </div>
+  <script>
+    let conElem = document.getElementsByClassName('container')[0]
+    let itemWrpElems = document.getElementsByClassName('item-wrapper')
+    let frag = document.createDocumentFragment()
+
+    let itemWrpHeight = null
+
+    const MAX_COLOR = 255
+    const HEIGHT_SCOPE = 150
+    const MIN_HEIGHT = 200
+
+    let getRandom = (num) => Math.floor(Math.random() * num)
+    let getColor = () => `rgb(${getRandom(MAX_COLOR)}, ${getRandom(MAX_COLOR)}, ${getRandom(MAX_COLOR)})`
+    let getHeight = () => `${getRandom(HEIGHT_SCOPE) + MIN_HEIGHT}px`
+    let getMinItemWrp = () => {
+      let min, nth
+      for (let m = 0; m < itemWrpElems.length; m++) {
+        if (!min) {
+          min = itemWrpElems[m].getBoundingClientRect().height
+          nth = 0
+        } else {
+          if (itemWrpElems[m].getBoundingClientRect().height < min) {
+            min = itemWrpElems[m].getBoundingClientRect().height
+            nth = m
+          }
+        }
+      }
+      return {
+        min: min,
+        nth: nth
+      }
+    }
+    let makeItem = (itemIndex, wrpIndex) => {
+      let item = document.createElement('div')
+          
+      item.className = 'item'
+      item.innerText = itemIndex
+      item.style.backgroundColor = getColor()
+      item.style.height = getHeight()
+      itemWrpElems[wrpIndex].appendChild(item)
+    }
+    let creatItem = () => {
+      for (let j = 5; j < 80; j++) {
+        makeItem(j, getMinItemWrp().nth)
+      }
+    }
+    let init = () => {
+      for (let i = 0; i < itemWrpElems.length; i++) {
+        for (let n = 0; n < 4; n++) {
+          makeItem(n, i)
+        }
+      }
+
+      creatItem()
+    }
+
+    init()
+  </script>
+</body>
+</html>

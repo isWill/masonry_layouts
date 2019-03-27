@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+    }
+    .queue {
+      flex-basis: 24%;
+    }
+    .item {
+      width: 100%;
+      margin: 2.5% 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+    <div class="queue">
+      <div class="item-wrapper"></div>
+    </div>
+  </div>
+  <script>
+    let getRandom = (num) => {
+      return Math.floor(Math.random() * num)
+    }
+
+    let getColor = (maxColor) => {
+      return `rgb(${getRandom(maxColor)}, ${getRandom(maxColor)}, ${getRandom(maxColor)})`
+    }
+
+    let getHeight = (heightScope, minHeight) => {
+      return `${getRandom(heightScope) + minHeight}px`
+    }
+
+    class FLexLayout {
+      constructor(paramObj) {
+        if (!(typeof paramObj === 'object' && paramObj instanceof Object && !(paramObj instanceof Array))) throw new Error('Param is no object type!')
+        this.conElem = paramObj.conElem
+        this.itemWrpElems = paramObj.itemWrpElems
+
+        this.itemWrpHeight = null
+        this.itemWrpElemsLen = this.itemWrpElems.length
+
+        this.MAX_COLOR = param.maxColor || 255
+        this.HEIGHT_SCOPE = param.heightScope || 150
+        this.MIN_HEIGHT = param.minHeight || 200
+
+        this.init()
+      }
+
+      getMinItemWrp() {
+        let min, nth
+        for (let m = 0; m < this.itemWrpElemsLen; m++) {
+          if (!min) {
+            min = this.itemWrpElems[m].getBoundingClientRect().height
+            nth = 0
+          } else {
+            if (this.itemWrpElems[m].getBoundingClientRect().height < min) {
+              min = this.itemWrpElems[m].getBoundingClientRect().height
+              nth = m
+            }
+          }
+        }
+        return {
+          min: min,
+          nth: nth
+        }
+      }
+
+      makeItem(itemIndex, wrpIndex) {
+        let item = document.createElement('div')
+            
+        item.className = 'item'
+        item.innerText = itemIndex
+        item.style.backgroundColor = getColor(this.MAX_COLOR)
+        item.style.height = getHeight(this.HEIGHT_SCOPE, this.MIN_HEIGHT)
+        this.itemWrpElems[wrpIndex].appendChild(item)
+      }
+
+      creatItem() {
+        for (let j = 5; j < 80; j++) {
+          this.makeItem(j, this.getMinItemWrp().nth)
+        }
+      }
+
+      init() {
+        for (let i = 0; i < this.itemWrpElemsLen; i++) {
+          for (let n = 0; n < 4; n++) {
+            this.makeItem(n, i)
+          }
+        }
+
+        this.creatItem()
+      }
+    }
+
+    let param = {
+      conElem: document.getElementsByClassName('container')[0],
+      itemWrpElems: document.getElementsByClassName('item-wrapper')
+    }
+
+    let flexLayout = new FLexLayout(param)
+  </script>
+</body>
+</html>
